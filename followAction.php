@@ -10,9 +10,9 @@
     
     if($followExist == 0){
         if($user['id_postprivacy'] == 0){
-            $query = "INSERT INTO t_follow VALUES ('', $follower, $followed, 1)";
+            $query = "INSERT INTO t_follow VALUES (NULL, $follower, $followed, 1)";
         }else{
-            $query = "INSERT INTO t_follow VALUES ('', $follower, $followed, 0)";
+            $query = "INSERT INTO t_follow VALUES (NULL, $follower, $followed, 0)";
         }
     }else{
         $query = "DELETE FROM t_follow WHERE id_follower = $follower AND id_followed = $followed";

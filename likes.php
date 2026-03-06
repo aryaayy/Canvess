@@ -8,7 +8,7 @@
     $likeExist = checkLikesMain($id_user, $id_mainchat);
     
     if($likeExist == 0){
-        $query = "INSERT INTO t_likesmain VALUES ('', $id_user, $id_mainchat)";
+        $query = "INSERT INTO t_likesmain VALUES (NULL, $id_user, $id_mainchat)";
     }else{
         $query = "DELETE FROM t_likesmain WHERE id_user = $id_user AND id_mainchat = $id_mainchat";
     }

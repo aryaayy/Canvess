@@ -34,6 +34,8 @@
         
         $query = "SELECT t_user.username as username, t_mainchat.* FROM t_mainchat INNER JOIN t_user ON t_mainchat.id_user = t_user.id_user WHERE t_mainchat.id_mainchat = $id";
         $result = mysqli_fetch_assoc(mysqli_query($conn, $query));
+
+        // echo $result['main_message'];
         
         return $result;
     }
@@ -41,7 +43,7 @@
     function readMainChatProfile($id){
         global $conn;
         
-        $query = "SELECT t_user.username as username, t_mainchat.* FROM t_mainchat INNER JOIN t_user ON t_mainchat.id_user = t_user.id_user WHERE t_user.id_user = $id GROUP BY main_datetime DESC";
+        $query = "SELECT t_user.username as username, t_mainchat.* FROM t_mainchat INNER JOIN t_user ON t_mainchat.id_user = t_user.id_user WHERE t_user.id_user = $id ORDER BY main_datetime DESC";
         $result = mysqli_query($conn, $query);
         
         return $result;
@@ -89,7 +91,7 @@
     function readReplyChat(){
         global $conn;
         
-        $query = "SELECT t_user.username as username, t_replychat.* FROM t_replychat INNER JOIN t_user ON t_mainchat.id_user = t_user.id_user GROUP BY reply_datetime DESC";
+        $query = "SELECT t_user.username as username, t_replychat.* FROM t_replychat INNER JOIN t_user ON t_mainchat.id_user = t_user.id_user ORDER BY reply_datetime DESC";
         $result = mysqli_query($conn, $query);
         
         return $result;
@@ -98,7 +100,7 @@
     function readReplyChatPost($id){
         global $conn;
         
-        $query = "SELECT t_user.username as username, t_replychat.* FROM t_replychat INNER JOIN t_user ON t_replychat.id_user = t_user.id_user WHERE t_replychat.id_main = $id GROUP BY reply_datetime ASC";
+        $query = "SELECT t_user.username as username, t_replychat.* FROM t_replychat INNER JOIN t_user ON t_replychat.id_user = t_user.id_user WHERE t_replychat.id_main = $id ORDER BY reply_datetime ASC";
         $result = mysqli_query($conn, $query);
         
         return $result;
@@ -107,7 +109,7 @@
     function readReplyChatProfile($id){
         global $conn;
         
-        $query = "SELECT t_user.username as username, t_replychat.* FROM t_replychat INNER JOIN t_user ON t_replychat.id_user = t_user.id_user WHERE t_user.id_user = $id GROUP BY reply_datetime DESC";
+        $query = "SELECT t_user.username as username, t_replychat.* FROM t_replychat INNER JOIN t_user ON t_replychat.id_user = t_user.id_user WHERE t_user.id_user = $id ORDER BY reply_datetime DESC";
         $result = mysqli_query($conn, $query);
         
         return $result;
@@ -160,7 +162,7 @@
         $main_message = $_POST['main_message'];
         $isAnonymous = $_POST['isAnonymous'];
 
-        $query = "INSERT INTO t_mainchat VALUES('', '$main_message', '', '$isAnonymous', $id_user)";
+        $query = "INSERT INTO t_mainchat VALUES(NULL, '$main_message', NULL, '$isAnonymous', $id_user)";
         $result = mysqli_query($conn, $query);
 
         $id_mainchat = 0;
@@ -185,7 +187,7 @@
         $isAnonymous = $_POST['isAnonymous'];
 
         $query = "INSERT INTO t_replychat 
-                  VALUES('', '$reply_message', '', '$isAnonymous', $id_user, $id_mainchat)";
+                  VALUES(NULL, '$reply_message', NULL, '$isAnonymous', $id_user, $id_mainchat)";
         $result = mysqli_query($conn, $query);
 
         $isSucceed = mysqli_affected_rows($conn);
@@ -278,7 +280,7 @@
     function adminReply()
 	{
         global $conn;
-        $query = "SELECT t_replychat.*, t_mainchat.*, t_user.username from t_replychat INNER JOIN t_mainchat ON t_mainchat.id_mainchat = t_replychat.id_main INNER JOIN t_user ON t_user.id_user = t_replychat.id_user GROUP BY reply_datetime ASC";
+        $query = "SELECT t_replychat.*, t_mainchat.*, t_user.username from t_replychat INNER JOIN t_mainchat ON t_mainchat.id_mainchat = t_replychat.id_main INNER JOIN t_user ON t_user.id_user = t_replychat.id_user ORDER BY reply_datetime ASC";
         $result = mysqli_query($conn, $query);
     
         return $result;
@@ -287,7 +289,7 @@
     function adminMainChat()
 	{
         global $conn;
-        $query = "SELECT t_mainchat.*, t_user.username from t_mainchat INNER JOIN t_user ON t_user.id_user = t_mainchat.id_user GROUP BY main_datetime ASC";
+        $query = "SELECT t_mainchat.*, t_user.username from t_mainchat INNER JOIN t_user ON t_user.id_user = t_mainchat.id_user ORDER BY main_datetime ASC";
         $result = mysqli_query($conn, $query);
     
         return $result;
@@ -390,7 +392,7 @@
     function follow($user1, $user2){
         global $conn;
 
-        $query = "INSERT INTO t_follow VALUES ('', $user1, $user2)";
+        $query = "INSERT INTO t_follow VALUES (NULL, $user1, $user2)";
         $result = mysqli_query($conn, $query);
 
         $isSucceed = mysqli_affected_rows($conn);
