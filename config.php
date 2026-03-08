@@ -30,7 +30,7 @@
             $this->USER = getenv('USER');
             $this->PASS = getenv('PASS');
             $this->DB = getenv('DB');
-            $this->CA = getenv('CA');
+            $this->CA = __DIR__ . getenv('CA');
         }
 
         function get_conn(){
