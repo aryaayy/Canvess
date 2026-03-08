@@ -1,114 +1,120 @@
 <?php
-session_start();
-// Koneksi ke database
-include('function.php');
+	session_start();
+	// Koneksi ke database
+	include('function.php');
+	require_once 'config.php';
 
-global $conn;
+	use Config\Database;
 
-$id_user = "";
-$email = "";
-$password = "";
-if(isset($_GET['id_mainchat'])){
-	$_SESSION['id_mainchat'] = $_GET['id_mainchat'];
-	$_SESSION['type'] = $_GET['type'];
-}else if(isset($_GET['username'])){
-	$_SESSION['username'] = $_GET['username'];
-}
+	// global $conn;
+	$db = new Database();
+	$db->connect();
 
-if(isset($_GET['type'])){
-	$_SESSION['type'] = $_GET['type'];
-}
-// Memproses data login
-if (isset($_POST['signin'])) {
-    $email = $_POST['email'];
-    $password = $_POST['password'];
+	$id_user = "";
+	$email = "";
+	$password = "";
+	if(isset($_GET['id_mainchat'])){
+		$_SESSION['id_mainchat'] = $_GET['id_mainchat'];
+		$_SESSION['type'] = $_GET['type'];
+	}else if(isset($_GET['username'])){
+		$_SESSION['username'] = $_GET['username'];
+	}
 
-    // $query = "SELECT * FROM t_user WHERE email = '$email' AND password = MD5('$password')";
-    $query = "SELECT * FROM t_user WHERE email = '$email' AND password = '$password'";
-    $result = mysqli_fetch_assoc(mysqli_query($conn, $query));
+	if(isset($_GET['type'])){
+		$_SESSION['type'] = $_GET['type'];
+	}
+	// Memproses data login
+	if (isset($_POST['signin'])) {
+		$email = $_POST['email'];
+		$password = $_POST['password'];
 
-    if (isset($result['id_user'])) {
-		$_SESSION['session_id_user'] = $result['id_user'];
-		$user = readUserProfile($_SESSION['session_id_user']);
-		$_SESSION['authority'] = $user['id_authority'];
-		if($_SESSION['authority'] != 1){
+		// $query = "SELECT * FROM t_user WHERE email = '$email' AND password = MD5('$password')";
+		$query = "SELECT * FROM t_user WHERE email = '$email' AND password = '$password'";
+		$result = mysqli_fetch_assoc(mysqli_query($db->get_conn(), $query));
 
-			if($_SESSION['type'] == 1){
-				header("Location: index.php");
-			}else if($_SESSION['type'] == 2){
-				header("Location: form/createPost.php");
-			}else if($_SESSION['type'] == 3){
-				$id_mainchat = $_SESSION['id_mainchat'];
-				header("Location: post.php?id_mainchat=$id_mainchat");
-			}else if($_SESSION['type'] == 4){
-				$username = $_SESSION['username'];
-				header("Location: seeProfile.php?username=$username");
-			}
-		}else{
-			header("Location: admin/indexAdmin.php");
-		}
-		exit();
-		
-    } else {
-        echo "
-        <script>
-        alert('Wrong email or password!');
-        </script>
-        ";
-    }
-}else if (isset($_POST['signup'])) {
-    $username = $_POST['username'];
-    $email = $_POST['email'];
-    $password = $_POST['password'];
-    $cpassword = $_POST['cpassword'];
-    // $password = md5($_POST['password']);
-    // $cpassword = md5($_POST['cpassword']);
-	
-    if ($password == $cpassword) {
-        $sql = "SELECT * FROM t_user WHERE email='$email'";
-        $result = mysqli_query($conn, $sql);
-        if (!$result->num_rows > 0) {
-			$sql = "SELECT * FROM t_user WHERE username='$username'";
-			$result = mysqli_query($conn, $sql);
-			if(!$result->num_rows > 0){
+		if (isset($result['id_user'])) {
+			$_SESSION['session_id_user'] = $result['id_user'];
+			$user = readUserProfile($_SESSION['session_id_user']);
+			$_SESSION['authority'] = $user['id_authority'];
+			if($_SESSION['authority'] != 1){
 
-				$sql = "INSERT INTO t_user (email, username, password) VALUES ('$email', '$username', '$password')";
-				$result = mysqli_query($conn, $sql);
-
-				$isSucceed = mysqli_affected_rows($conn);
-				if ($isSucceed > 0) {
-					$sql = "SELECT * FROM t_user WHERE email='$email'";
-					$result = mysqli_fetch_assoc(mysqli_query($conn, $sql));
-
-					$_SESSION['session_id_user'] = $result['id_user'];
-					$user = readUserProfile($_SESSION['session_id_user']);
-					$_SESSION['authority'] = $user['id_authority'];
-			
-					if($_SESSION['type'] == 1){
-						header("Location: index.php");
-					}else if($_SESSION['type'] == 2){
-						header("Location: form/createPost.php");
-					}else if($_SESSION['type'] == 3){
-						$id_mainchat = $_SESSION['id_mainchat'];
-						header("Location: post.php?id_mainchat=$id_mainchat");
-					}else{
-						header('Location: index.php');
-					}
-					exit();
-				} else {
-					echo "<script>alert('Woops! Something went wrong.')</script>";
+				if($_SESSION['type'] == 1){
+					header("Location: index.php");
+				}else if($_SESSION['type'] == 2){
+					header("Location: form/createPost.php");
+				}else if($_SESSION['type'] == 3){
+					$id_mainchat = $_SESSION['id_mainchat'];
+					header("Location: post.php?id_mainchat=$id_mainchat");
+				}else if($_SESSION['type'] == 4){
+					$username = $_SESSION['username'];
+					header("Location: seeProfile.php?username=$username");
 				}
-			} else {
-				echo "<script>alert('Woops! Email has been used for another account.')</script>";
+			}else{
+				header("Location: admin/indexAdmin.php");
 			}
-		} else{
-			echo "<script>alert('Woops! Username has been used.')</script>";
+			exit();
+			
+		} else {
+			echo "
+			<script>
+			alert('Wrong email or password!');
+			</script>
+			";
 		}
-    } else if($password != $cpassword){
-		echo "<script>alert('Woops! Password does not match.')</script>";
-    }
-}
+	}else if (isset($_POST['signup'])) {
+		$username = $_POST['username'];
+		$email = $_POST['email'];
+		$password = $_POST['password'];
+		$cpassword = $_POST['cpassword'];
+		// $password = md5($_POST['password']);
+		// $cpassword = md5($_POST['cpassword']);
+		
+		if ($password == $cpassword) {
+			$sql = "SELECT * FROM t_user WHERE email='$email'";
+			$result = mysqli_query($db->get_conn(), $sql);
+			if (!$result->num_rows > 0) {
+				$sql = "SELECT * FROM t_user WHERE username='$username'";
+				$result = mysqli_query($db->get_conn(), $sql);
+				if(!$result->num_rows > 0){
 
+					$sql = "INSERT INTO t_user (email, username, password) VALUES ('$email', '$username', '$password')";
+					$result = mysqli_query($db->get_conn(), $sql);
+
+					$isSucceed = mysqli_affected_rows($db->get_conn());
+					if ($isSucceed > 0) {
+						$sql = "SELECT * FROM t_user WHERE email='$email'";
+						$result = mysqli_fetch_assoc(mysqli_query($db->get_conn(), $sql));
+
+						$_SESSION['session_id_user'] = $result['id_user'];
+						$user = readUserProfile($_SESSION['session_id_user']);
+						$_SESSION['authority'] = $user['id_authority'];
+				
+						if($_SESSION['type'] == 1){
+							header("Location: index.php");
+						}else if($_SESSION['type'] == 2){
+							header("Location: form/createPost.php");
+						}else if($_SESSION['type'] == 3){
+							$id_mainchat = $_SESSION['id_mainchat'];
+							header("Location: post.php?id_mainchat=$id_mainchat");
+						}else{
+							header('Location: index.php');
+						}
+						exit();
+					} else {
+						echo "<script>alert('Woops! Something went wrong.')</script>";
+					}
+				} else {
+					echo "<script>alert('Woops! Email has been used for another account.')</script>";
+				}
+			} else{
+				echo "<script>alert('Woops! Username has been used.')</script>";
+			}
+		} else if($password != $cpassword){
+			echo "<script>alert('Woops! Password does not match.')</script>";
+		}
+	}
+
+	$db->close();
 ?>
 
 <!DOCTYPE html>

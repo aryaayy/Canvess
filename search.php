@@ -2,6 +2,13 @@
 // search.php
 session_start();
   include('function.php');
+  require_once 'config.php';
+
+  use Config\Database;
+
+  // global $conn;
+  $db = new Database();
+  $db->connect();
 
   if(isset($_SESSION['session_id_user'])){
     $id_user = $_SESSION['session_id_user'];
@@ -20,7 +27,7 @@ session_start();
 if (isset($_GET['username'])) {
     $searchUsername = $_GET['username'];
     $query = "SELECT * FROM t_user WHERE username LIKE '%$searchUsername%' GROUP BY username ASC";
-    $result = mysqli_query($conn, $query);
+    $result = mysqli_query($db->get_conn(), $query);
     $data = array();
 
     if (mysqli_num_rows($result) > 0) {
@@ -28,8 +35,10 @@ if (isset($_GET['username'])) {
             $data[] = $row;
         }
     }
+    $db->close();
 } else {
     // Jika tidak ada username yang diberikan, kembali ke halaman sebelumnya
+    $db->close();
     header("Location: index.php");
     exit();
 }
