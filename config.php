@@ -25,12 +25,12 @@
             // $this->CA = $_ENV["CA"];
             
             /* prod */
-            $this->HOST = getenv('DB_HOST');
-            $this->PORT = getenv('DB_PORT');
-            $this->USER = getenv('DB_USER');
-            $this->PASS = getenv('DB_PASS');
-            $this->DB = getenv('DB_NAME');
-            $this->CA = getenv('DB_CA');
+            $this->HOST = getenv('HOST');
+            $this->PORT = getenv('PORT');
+            $this->USER = getenv('USER');
+            $this->PASS = getenv('PASS');
+            $this->DB = getenv('DB');
+            $this->CA = getenv('CA');
         }
 
         function get_conn(){
