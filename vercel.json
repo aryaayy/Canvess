@@ -3,6 +3,10 @@
     {
       "src": "index.php",
       "use": "vercel-php@0.6.2"
+    },
+    {
+      "src": "**/*.{css,js,png,jpg,jpeg,gif,svg,ico,woff,woff2,ttf,eot}",
+      "use": "@vercel/static"
     }
   ],
   "routes": [
