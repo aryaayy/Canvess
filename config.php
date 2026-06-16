@@ -14,23 +14,23 @@
 
         function __construct(){
             /* local */
-            // $dotenv = \Dotenv\Dotenv::createImmutable(__DIR__);
-            // $dotenv->load();
+            $dotenv = \Dotenv\Dotenv::createImmutable(__DIR__);
+            $dotenv->load();
 
-            // $this->HOST = $_ENV["HOST"];
-            // $this->PORT = $_ENV["PORT"];
-            // $this->USER = $_ENV["USER"];
-            // $this->PASS = $_ENV["PASS"];
-            // $this->DB = $_ENV["DB"];
-            // $this->CA = $_ENV["CA"];
+            $this->HOST = $_ENV["HOST"];
+            $this->PORT = $_ENV["PORT"];
+            $this->USER = $_ENV["USER"];
+            $this->PASS = $_ENV["PASS"];
+            $this->DB = $_ENV["DB"];
+            $this->CA = $_ENV["CA"];
             
             /* prod */
-            $this->HOST = getenv('HOST');
-            $this->PORT = getenv('PORT');
-            $this->USER = getenv('USER');
-            $this->PASS = getenv('PASS');
-            $this->DB = getenv('DB');
-            $this->CA = __DIR__ . getenv('CA');
+            // $this->HOST = getenv('HOST');
+            // $this->PORT = getenv('PORT');
+            // $this->USER = getenv('USER');
+            // $this->PASS = getenv('PASS');
+            // $this->DB = getenv('DB');
+            // $this->CA = __DIR__ . getenv('CA');
         }
 
         function get_conn(){
